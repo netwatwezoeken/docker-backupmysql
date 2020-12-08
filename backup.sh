@@ -1,6 +1,13 @@
 backupname=$MYSQL_DATABASE-$(date -Iseconds -u)
 echo "Creating backup" $backupname
-mysqldump -u $MYSQL_USER --password=$MYSQL_PASSWORD -h $MYSQL_HOST --databases $MYSQL_DATABASE > $backupname.sql
+
+port=3306
+if [ ! -z "$MYSQL_PORT" ]
+then
+	port=$MYSQL_PORT
+fi
+
+mysqldump -u $MYSQL_USER --password=$MYSQL_PASSWORD -h $MYSQL_HOST -P $port --databases $MYSQL_DATABASE > $backupname.sql
 echo "Storing backup"
 tar -zcvf $backupname.tgz $backupname.sql
 
